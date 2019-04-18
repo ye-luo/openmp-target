@@ -1,0 +1,27 @@
+A sgemv example
+
+Step 0
+Serial
+
+Step 1
+omp parallel for
+
+Step 2
+omp target parallel for
+using 1 SM
+
+Step 3
+omp target teams distribute parallel for
+using all possible SMs
+
+Step 4
+omp target
+with reduction
+
+Step 5
+omp parallel for
+over many matrices
+
+Step 6
+omp parallel for + target
+over many matrices to GPU
