@@ -1,3 +1,3 @@
 name=gemm-serial
 ${name}.x: ${name}.cpp
-	clang++ -std=c++11 -Drestrict=__restrict__ -g -o $@ $<
+	clang++ -std=c++11 -Drestrict=__restrict__ -O3 -g -o $@ $<
