@@ -1,5 +1,5 @@
-#define N 2048
-#include <iostream>
+#define N 1024
+#include "timer.h"
 
 template <typename T>
 void gemmT(int n, const T* restrict A, const T* restrict B, T* restrict C)
@@ -21,12 +21,15 @@ template <class T>
 T* allocate(int n)
 {
   T* ptr = new T[n];
+  std::fill_n(ptr, n, T(1));
+  #pragma omp target enter data map(to:ptr[:n])
   return ptr;
 }
 
 template <class T>
 void deallocate(T* ptr, int n)
 {
+  #pragma omp target exit data map(delete:ptr[:n])
   delete[] ptr;
 }
 
@@ -36,7 +39,10 @@ int main()
   auto* B = allocate<float>(N*N);
   auto* C = allocate<float>(N*N);
 
-  gemmT(N, A, B, C);
+  {
+    Timer local("GEMMT");
+    gemmT(N, A, B, C);
+  }
 
   deallocate(A, N*N);
   deallocate(B, N*N);
