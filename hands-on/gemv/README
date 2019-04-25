@@ -14,6 +14,8 @@ Step 3
 omp target teams distribute parallel for
 using all possible SMs
 
+use enter/exit data
+
 Step 4
 omp target
 with reduction
