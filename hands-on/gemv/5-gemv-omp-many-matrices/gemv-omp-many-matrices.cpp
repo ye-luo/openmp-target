@@ -1,7 +1,6 @@
-#define N 2048
-#include <iostream>
+#define N 4096
 #include <vector>
-#include <omp.h>
+#include "timer.h"
 
 template <typename T>
 void gemv(int n, T alpha, const T* restrict A, const T* restrict V, T* restrict Vout)
@@ -20,6 +19,7 @@ template <class T>
 T* allocate(int n)
 {
   T* ptr = new T[n];
+  std::fill_n(ptr, n, T(1));
   return ptr;
 }
 
@@ -35,7 +35,7 @@ int main()
   std::vector<float*> manyV;
   std::vector<float*> manyVout;
 
-  int Num_calc = 8;
+  const int Num_calc = 8;
   for(int i=0; i<Num_calc; i++)
   {
     manyA.push_back(allocate<float>(N*N));
@@ -43,9 +43,12 @@ int main()
     manyVout.push_back(allocate<float>(N));
   }
 
-  #pragma omp parallel for
-  for(int i=0; i<Num_calc; i++)
-    gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
+  {
+    Timer local("multiGEMV");
+    #pragma omp parallel for
+    for(int i=0; i<Num_calc; i++)
+      gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
+  }
 
   for(int i=0; i<Num_calc; i++)
   {
