@@ -1,6 +1,8 @@
+include ../../make.inc
+
 name=gemv-omp-many-matrices
 ${name}.x: ${name}.cpp
-	clang++ -std=c++11 -Drestrict=__restrict__ -fopenmp -O3 -g -o $@ -I ../../common $<
+	${CXX} -std=c++11 -Drestrict=__restrict__ ${CXX_FLAGS} ${CXX_OFFLOAD_FLAGS} -o $@ -I ../../common $<
 
 .PHONY : clean
 clean :

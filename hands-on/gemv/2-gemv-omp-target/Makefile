@@ -1,6 +1,8 @@
+include ../../make.inc
+
 name=gemv-omp-target
 ${name}.x: ${name}.cpp
-	clang++ -std=c++11 -Drestrict=__restrict__ -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda -O3 -g -o $@ -I ../../common $<
+	${CXX} -std=c++11 -Drestrict=__restrict__ ${CXX_FLAGS} ${CXX_OFFLOAD_FLAGS} -o $@ -I ../../common $<
 
 .PHONY : clean
 clean :
