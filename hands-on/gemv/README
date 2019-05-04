@@ -1,3 +1,6 @@
+Remeber to create a make.inc under hands-on
+Use make.clang-ykt.inc as example
+
 A sgemv example
 
 Step 0
