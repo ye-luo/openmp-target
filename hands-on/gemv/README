@@ -3,9 +3,6 @@ Use make.clang-ykt.inc as example
 
 A sgemv example
 
-Step 0
-Serial
-
 Step 1
 omp parallel for
 
