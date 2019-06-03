@@ -18,7 +18,7 @@ void gemv(int n, T alpha, const T* restrict A, const T* restrict V, T* restrict 
 }
 
 template <class T>
-T* allocate(int n)
+T* allocate(size_t n)
 {
   T* ptr = new T[n];
   std::fill_n(ptr, n, T(1));
@@ -27,7 +27,7 @@ T* allocate(int n)
 }
 
 template <class T>
-void deallocate(T* ptr, int n)
+void deallocate(T* ptr, size_t n)
 {
   #pragma omp target exit data map(delete:ptr[:n])
   delete[] ptr;
@@ -56,6 +56,15 @@ int main()
 
   for(int i=0; i<Num_calc; i++)
   {
+    auto* restrict Vout = manyVout[i];
+    #pragma omp target update from(Vout[:N])
+    for(int j=0; j<N; j++)
+      if(Vout[j]!=N)
+      {
+        std::cerr << "Calculation " << i << " Vout[" << j <<"] != " << N << ", wrong value is " << Vout[j] << std::endl;
+        break;
+      }
+
     deallocate(manyA[i], N*N);
     deallocate(manyV[i], N);
     deallocate(manyVout[i], N);

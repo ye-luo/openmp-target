@@ -16,7 +16,7 @@ void gemv(int n, T alpha, const T* restrict A, const T* restrict V, T* restrict 
 }
 
 template <class T>
-T* allocate(int n)
+T* allocate(size_t n)
 {
   T* ptr = new T[n];
   std::fill_n(ptr, n, T(1));
@@ -24,7 +24,7 @@ T* allocate(int n)
 }
 
 template <class T>
-void deallocate(T* ptr, int n)
+void deallocate(T* ptr, size_t n)
 {
   delete[] ptr;
 }
@@ -39,6 +39,13 @@ int main()
     Timer local("GEMV");
     gemv(N, 1.0f, A, V, Vout);
   }
+
+  for(int i=0; i<N; i++)
+    if(Vout[i]!=N)
+    {
+      std::cerr << "Vout[" << i <<"] != " << N << ", wrong value is " << Vout[i] << std::endl;
+      break;
+    }
 
   deallocate(A, N*N);
   deallocate(V, N);

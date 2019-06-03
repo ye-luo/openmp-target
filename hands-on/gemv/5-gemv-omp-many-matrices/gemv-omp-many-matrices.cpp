@@ -16,7 +16,7 @@ void gemv(int n, T alpha, const T* restrict A, const T* restrict V, T* restrict 
 }
 
 template <class T>
-T* allocate(int n)
+T* allocate(size_t n)
 {
   T* ptr = new T[n];
   std::fill_n(ptr, n, T(1));
@@ -24,7 +24,7 @@ T* allocate(int n)
 }
 
 template <class T>
-void deallocate(T* ptr, int n)
+void deallocate(T* ptr, size_t n)
 {
   delete[] ptr;
 }
@@ -52,6 +52,13 @@ int main()
 
   for(int i=0; i<Num_calc; i++)
   {
+    for(int j=0; j<N; j++)
+      if(manyVout[i][j]!=N)
+      {
+        std::cerr << "Calculation " << i << " Vout[" << j <<"] != " << N << ", wrong value is " << manyVout[i][j] << std::endl;
+        break;
+      }
+
     deallocate(manyA[i], N*N);
     deallocate(manyV[i], N);
     deallocate(manyVout[i], N);
