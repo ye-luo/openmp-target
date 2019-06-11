@@ -25,5 +25,9 @@ omp parallel for
 over many matrices
 
 Step 6
-omp parallel for + target
+omp parallel for + target teams distribute
+over many matrices to GPU
+
+Step 7
+omp parallel for + target teams distribute + parallel for
 over many matrices to GPU
