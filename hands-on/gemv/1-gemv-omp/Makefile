@@ -2,7 +2,7 @@ include ../../make.inc
 
 name=gemv-omp
 ${name}.x: ${name}.cpp
-	${CXX} -std=c++11 -Drestrict=__restrict__ ${CXX_FLAGS} -o $@ -I ../../common $<
+	${CXX} -std=c++11 ${CXX_FLAGS} -o $@ -I ../../common $<
 
 .PHONY : clean
 clean :
