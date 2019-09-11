@@ -52,18 +52,15 @@ real(8) :: alpha,sum_val
 real(8),intent(in) :: A(1:nval*nval),V(1:nval)
 real(8),intent(inout):: Vout(1:nval)
 
-!$omp target  data map(to:A,V) map(from:Vout) 
-!$omp parallel do default(shared),private(tid,row,col,A_row,sum_val)
+!$omp target teams distribute map(to:A,V) map(from:Vout) private(sum_val)
 do row=1,nval
-   tid=OMP_GET_THREAD_NUM()
    sum_val = 0.0
    A_row =(row-1)*nval
-   write(*,*) "total number of threads: ",tid,A_row,A_row+nval,nval*nval
+   !$omp parallel do reduction(+:sum_val)
    do col=1,nval
       sum_val = sum_val + A(A_row+nval)*V(col)
    end do
    Vout(row) = sum_val * alpha
 end do
-!$omp end parallel do
-!$omp end target data
+!$omp end target teams distribute
 end subroutine
