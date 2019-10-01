@@ -58,7 +58,7 @@ do row=1,nval
    sum_val = 0.0
    A_row =(row-1)*nval
    do col=1,nval
-      sum_val = sum_val + A(A_row+nval)*V(col)
+      sum_val = sum_val + A(A_row+col)*V(col)
    end do
    Vout(row) = sum_val * alpha
 end do
