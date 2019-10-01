@@ -63,8 +63,10 @@ real(8),intent(in) :: A(1:nval*nval),V(1:nval)
 real(8),intent(inout):: Vout(1:nval)
 
 do row=1,nval
+   !tid=OMP_GET_THREAD_NUM()
    sum_val = 0.0
    A_row =(row-1)*nval
+   !write(*,*) "total number of threads: ",tid,A_row,A_row+nval,nval*nval
    do col=1,nval
       sum_val = sum_val + A(A_row+col)*V(col)
    end do

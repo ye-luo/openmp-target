@@ -52,7 +52,7 @@ real(8) :: alpha,sum_val
 real(8),intent(in) :: A(1:nval*nval),V(1:nval)
 real(8),intent(inout):: Vout(1:nval)
 
-!$omp target teams distribute map(to:A,V) map(from:Vout)
+!$omp target teams distribute map(to:A,V) map(from:Vout) private(sum_val)
 do row=1,nval
    sum_val = 0.0
    A_row =(row-1)*nval
