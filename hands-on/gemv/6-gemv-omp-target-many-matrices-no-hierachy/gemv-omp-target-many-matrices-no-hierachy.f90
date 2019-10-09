@@ -14,27 +14,27 @@ integer,parameter :: Num_calc=8
 !!starts here
 call system_clock(ti,tk)
 
-allocate(A(1:Num_calc,1:N*N),stat=err)
+allocate(A(1:N*N,1:Num_calc),stat=err)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in allocation for A',err
-allocate(V(1:Num_calc,1:N),stat=err)
+allocate(V(1:N,1:Num_calc),stat=err)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in allocation for V',err
-allocate(Vout(1:Num_calc,1:N),stat=err)
+allocate(Vout(1:N,1:Num_calc),stat=err)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in allocation for Vout',err
   
 
 !$omp parallel do
 do i=1,Num_calc
-   A(i,:) = 1.0
-   V(i,:) = 1.0
-   call gemv(N,alpha,A(i,:),V(i,:),Vout(i,:))
+   A(:,i) = 1.0
+   V(:,i) = 1.0
+   call gemv(N,alpha,A(:,i),V(:,i),Vout(:,i))
 end do
 !$omp end parallel do
 
 do i=1,Num_calc
-!$omp target update from(Vout(i,:))
+!$omp target update from(Vout(:,i))
    do val=1,N
-     if (int(Vout(i,val)) .NE. N) then
-        write(*,*) "Value does not match at",i,val,int(Vout(i,val)) 
+     if (int(Vout(val,i)) .NE. N) then
+        write(*,*) "Value does not match at",val,i,int(Vout(val,i)) 
      end if
    end do
 end do
