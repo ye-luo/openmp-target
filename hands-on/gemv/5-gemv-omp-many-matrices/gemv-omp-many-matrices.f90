@@ -14,26 +14,26 @@ integer,parameter :: Num_calc=8
 !!starts here
 call system_clock(ti,tk)
 
-allocate(A(1:Num_calc,1:N*N),stat=err)
+allocate(A(1:N*N,1:Num_calc),stat=err)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in allocation for A',err
-allocate(V(1:Num_calc,1:N),stat=err)
+allocate(V(1:N,1:Num_calc),stat=err)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in allocation for V',err
-allocate(Vout(1:Num_calc,1:N),stat=err)
+allocate(Vout(1:N,1:Num_calc),stat=err)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in allocation for Vout',err
   
-A(:,:) = 1.0
-V(:,:) = 1.0
 
 !$omp parallel do
 do i=1,Num_calc
-   call gemv(N,alpha,A(i,:),V(i,:),Vout(i,:))
+   A(:,i) = 1.0
+   V(:,i) = 1.0
+   call gemv(N,alpha,A(:,i),V(:,i),Vout(:,i))
 end do
 !$omp end parallel do
 
 do i=1,Num_calc
    do val=1,N
-     if (int(Vout(i,val)) .NE. N) then
-        write(*,*) "Value does not match at",i,val,int(Vout(i,val)) 
+     if (int(Vout(val,i)) .NE. N) then
+        write(*,*) "Value does not match at",val,i,int(Vout(val,i)) 
      end if
    end do
 end do
@@ -46,6 +46,8 @@ if(err/=0) print'(a30,i9,i3)', 'ERROR in deallocation for V',err
 deallocate(Vout)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in deallocation for Vout',err
 call system_clock(tj,tk)
+
+print'(a20,3x,f12.4)',"total time: ", dble(tj-ti)/dble(tk)
 
 stop
 end 
@@ -60,7 +62,7 @@ integer:: row,col,A_row
 integer:: nval,tid
 real(8) :: alpha,sum_val
 real(8),intent(in) :: A(1:nval*nval),V(1:nval)
-real(8),intent(inout):: Vout(1:nval)
+real(8),intent(out):: Vout(1:nval)
 
 do row=1,nval
    !tid=OMP_GET_THREAD_NUM()
@@ -68,7 +70,7 @@ do row=1,nval
    A_row =(row-1)*nval
    !write(*,*) "total number of threads: ",tid,A_row,A_row+nval,nval*nval
    do col=1,nval
-      sum_val = sum_val + A(A_row+nval)*V(col)
+      sum_val = sum_val + A(A_row+col)*V(col)
    end do
    Vout(row) = sum_val * alpha
 end do
