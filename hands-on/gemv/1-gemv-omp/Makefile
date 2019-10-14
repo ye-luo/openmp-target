@@ -12,4 +12,4 @@ ${name}-f.x: ${name}.f90
 
 .PHONY : clean
 clean :
-	rm -f *.x 
+	rm -f *.x
