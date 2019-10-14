@@ -48,6 +48,8 @@ deallocate(Vout)
 if(err/=0) print'(a30,i9,i3)', 'ERROR in deallocation for Vout',err
 call system_clock(tj,tk)
 
+print'(a20,3x,f12.4)',"total time: ", dble(tj-ti)/dble(tk)
+
 stop
 end 
 
@@ -61,7 +63,7 @@ integer:: row,col,A_row
 integer:: nval,tid
 real(8) :: alpha,sum_val
 real(8),intent(in) :: A(1:nval*nval),V(1:nval)
-real(8),intent(inout):: Vout(1:nval)
+real(8),intent(out):: Vout(1:nval)
 
 !$omp target teams distribute map(to:A,V) map(from:Vout)
 do row=1,nval

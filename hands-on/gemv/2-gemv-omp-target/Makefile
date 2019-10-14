@@ -2,7 +2,7 @@ include ../../make.inc
 
 name=gemv-omp-target
 
-all: ${name}.x ${name}.f
+all: ${name}.x ${name}-f.x
 
 ${name}.x: ${name}.cpp
 	${CXX} -std=c++11 ${CXX_FLAGS} ${CXX_OFFLOAD_FLAGS} -o $@ -I ../../common $<
