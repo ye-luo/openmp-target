@@ -1,0 +1,8 @@
+CXX=icpx
+CXX_FLAGS=-g -O2 -fiopenmp
+CXX_OFFLOAD_FLAGS=-fopenmp-targets=spir64
+
+FC=ifx
+FC_FLAGS=${CXX_FLAGS}
+FC_OFFLOAD_FLAGS=${CXX_OFFLOAD_FLAGS}
+
