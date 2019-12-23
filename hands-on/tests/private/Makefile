@@ -3,7 +3,7 @@ include ../../make.inc
 name=target_teams_distribute_private
 
 all_targets=
-ifdef ENABLE_C
+ifdef ENABLE_CC
   all_targets += ${name}.c.x
 endif
 ifdef ENABLE_CXX
