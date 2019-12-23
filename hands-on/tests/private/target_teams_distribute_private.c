@@ -3,7 +3,7 @@
 
 int main()
 {
-  const int Nteams = 2;
+  const int Nteams = 3;
   void* pointer[Nteams];
   int team_ID[Nteams];
   float a;
@@ -15,7 +15,9 @@ int main()
   }
 
   printf("host pointer = %p\n", &a);
-  for(int i = 0; i<Nteams; i++)
-    printf("pointer[%d] = %p, team id %d\n", i, pointer[i], team_ID[i]);
+  for(int i = 0; i<Nteams-1; i++)
+    for(int j = i+1; j<Nteams; j++)
+      if(team_ID[i] != team_ID[j] && pointer[i] == pointer[j])
+        printf("ERROR identical pointer[%d] = %p, team id %d and %d\n", i, pointer[i], team_ID[i], team_ID[j]);
   return 0;
 }
