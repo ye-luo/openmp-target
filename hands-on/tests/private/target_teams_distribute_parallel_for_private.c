@@ -21,7 +21,7 @@ int main()
   printf("host pointer = %p\n", &a);
   for(int i = 0; i<Ntot-1; i++)
     for(int j = i+1; j<Ntot; j++)
-      if(team_ID[i] != team_ID[j] && thread_ID[i]!=thread_ID[j] && pointer[i] == pointer[j])
+      if((team_ID[i] != team_ID[j] || thread_ID[i]!=thread_ID[j]) && pointer[i] == pointer[j])
         printf("ERROR identical pointer = %p, (team,thread) id (%d,%d) and (%d,%d)\n", pointer[i], team_ID[i], thread_ID[i], team_ID[j], thread_ID[j]);
   return 0;
 }
