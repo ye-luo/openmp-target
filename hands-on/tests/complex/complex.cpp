@@ -10,6 +10,7 @@ int main()
   }
 
   if (std::abs(c - a * b) > 1e-6)
-    printf("wrong a * b (%f,%f), correct value (%f,%f)\n", std::real(c), std::imag(c), std::real(a*b), std::imag(a*b) );
+    std::cout << "wrong a * b (" << std::real(c) << "," << std::imag(c) << "), "
+              << "correct value (" << std::real(a*b) << "," << std::imag(a*b) << ")" << std::endl;
   return 0;
 }
