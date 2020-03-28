@@ -1,0 +1,21 @@
+All three cases work if only calling C functions directly by adding -DC_ONLY flag.
+clang++ -fopenmp -fopenmp-targets=nvptx64 -DC_ONLY sincos.cpp
+
+When the code becomes more C++,
+
+$ clang++ -fopenmp -fopenmp-targets=nvptx64 sincos.cpp
+nvlink error   : Undefined reference to '_ZL6sincosdPdS_' in '/tmp/sincos-b90610.cubin'
+clang-11: error: nvlink command failed with exit code 255 (use -v to see invocation)
+
+$ clang++ -fopenmp -fopenmp-targets=nvptx64 sin_cos.cpp 
+fatal error: error in backend: Cannot select: t11: f32 = fsin t10
+  t10: f32,ch = load<(dereferenceable load 4 from %ir.__x.addr)> t9, FrameIndex:i64<0>, undef:i64
+    t8: i64 = FrameIndex<0>
+    t3: i64 = undef
+In function: _ZSt3sinf
+clang-11: error: clang frontend command failed with exit code 70 (use -v to see invocation)
+
+$ clang++ -fopenmp -fopenmp-targets=nvptx64 modf.cpp 
+nvlink error   : Undefined reference to '_ZL4modfdPd' in '/tmp/modf-796c89.cubin'
+nvlink error   : Undefined reference to 'modff' in '/tmp/modf-796c89.cubin'
+clang-11: error: nvlink command failed with exit code 255 (use -v to see invocation)
