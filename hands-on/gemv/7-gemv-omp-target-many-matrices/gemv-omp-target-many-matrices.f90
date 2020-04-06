@@ -69,7 +69,7 @@ real(8),intent(out):: Vout(1:nval)
 do row=1,nval
    sum_val = 0.0
    A_row =(row-1)*nval
-!$omp parallel do default(shared),private(A_row),reduction(+:sum_val)
+!$omp parallel do default(shared) private(A_row) reduction(+:sum_val)
    do col=1,nval
       sum_val = sum_val + A(A_row+col)*V(col)
    end do

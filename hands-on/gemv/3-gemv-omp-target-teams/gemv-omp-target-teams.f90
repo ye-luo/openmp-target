@@ -56,7 +56,7 @@ real(8),intent(out):: Vout(1:nval)
 
 !$omp target teams distribute parallel do &
 !$omp map(to:A,V) map(from:Vout) &
-!$omp default(shared),private(tid,row,col,A_row,sum_val)
+!$omp default(shared) private(tid,row,col,A_row,sum_val)
 do row=1,nval
    !tid=OMP_GET_THREAD_NUM()
    sum_val = 0.0

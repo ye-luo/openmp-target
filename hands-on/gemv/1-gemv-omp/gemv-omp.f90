@@ -54,7 +54,7 @@ real(8) :: alpha,sum_val
 real(8),intent(in) :: A(1:nval*nval),V(1:nval)
 real(8),intent(out):: Vout(1:nval)
 
-!$omp parallel do default(shared),private(tid,row,col,A_row,sum_val)
+!$omp parallel do default(shared) private(tid,row,col,A_row,sum_val)
 do row=1,nval
    !tid=OMP_GET_THREAD_NUM()
    sum_val = 0.0
