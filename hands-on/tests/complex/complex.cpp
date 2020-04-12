@@ -4,6 +4,17 @@
 int main()
 {
   std::complex<float> a(0, 1), b(0.5, 0.3), c;
+  std::complex<float> a_check;
+  #pragma omp target map(from:a_check)
+  {
+    a_check = a;
+  }
+
+  if (std::abs(a - a_check) > 1e-6)
+  {
+    std::cout << "wrong a_check" << a_check << " correct value " << a << std::endl;
+  }
+
   #pragma omp target map(from:c)
   {
     c = a * b;
