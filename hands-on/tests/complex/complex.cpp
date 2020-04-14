@@ -2,10 +2,9 @@
 #include <complex>
 
 template<typename T>
-void test_complex()
+void test_map()
 {
-  std::complex<T> a(0, 1), b(0.5, 0.3), c;
-  std::complex<T> a_check;
+  std::complex<T> a(0.2, 1), a_check;
   #pragma omp target map(from:a_check)
   {
     a_check = a;
@@ -15,21 +14,14 @@ void test_complex()
   {
     std::cout << "wrong map value check" << a_check << " correct value " << a << std::endl;
   }
-
-  #pragma omp target map(from:c)
-  {
-    c = a * b;
-  }
-
-  if (std::abs(c - a * b) > 1e-6)
-    std::cout << "wrong a * b (" << std::real(c) << "," << std::imag(c) << "), "
-              << "correct value (" << std::real(a*b) << "," << std::imag(a*b) << ")" << std::endl;
 }
 
-template<typename T>
-void test_plus()
+template<typename RT, typename AT, typename BT>
+void test_plus(AT a, BT b)
 {
-  std::complex<T> a(0, 1), b(0.5, 0.3), c, c_host(a + b);
+  std::complex<RT> c, c_host;
+
+  c_host = a + b;
   #pragma omp target map(from:c)
   {
     c = a + b;
@@ -37,15 +29,86 @@ void test_plus()
 
   if (std::abs(c - c_host) > 1e-6)
   {
-    std::cout << "wrong operator plus value check" << c << " correct value " << c_host << std::endl;
+    std::cout << "wrong operator + value check" << c << " correct value " << c_host << std::endl;
   }
+}
+
+template<typename RT, typename AT, typename BT>
+void test_minus(AT a, BT b)
+{
+  std::complex<RT> c, c_host;
+
+  c_host = a - b;
+  #pragma omp target map(from:c)
+  {
+    c = a - b;
+  }
+
+  if (std::abs(c - c_host) > 1e-6)
+  {
+    std::cout << "wrong operator - value check" << c << " correct value " << c_host << std::endl;
+  }
+}
+
+template<typename RT, typename AT, typename BT>
+void test_mul(AT a, BT b)
+{
+  std::complex<RT> c, c_host;
+
+  c_host = a * b;
+  #pragma omp target map(from:c)
+  {
+    c = a * b;
+  }
+
+  if (std::abs(c - c_host) > 1e-6)
+  {
+    std::cout << "wrong operator * value check" << c << " correct value " << c_host << std::endl;
+  }
+}
+
+template<typename RT, typename AT, typename BT>
+void test_div(AT a, BT b)
+{
+  std::complex<RT> c, c_host;
+
+  c_host = a / b;
+  #pragma omp target map(from:c)
+  {
+    c = a / b;
+  }
+
+  if (std::abs(c - c_host) > 1e-6)
+  {
+    std::cout << "wrong operator / value check" << c << " correct value " << c_host << std::endl;
+  }
+}
+
+template<typename T>
+void test_complex()
+{
+  test_map<T>();
+
+  test_plus<T>(std::complex<T>(0, 1), std::complex<T>(0.5, 0.3));
+  test_plus<T>(std::complex<T>(0, 1), T(0.5));
+  test_plus<T>(T(0.5), std::complex<T>(0, 1));
+
+  test_minus<T>(std::complex<T>(0, 1), std::complex<T>(0.5, 0.3));
+  test_minus<T>(std::complex<T>(0, 1), T(0.5));
+  test_minus<T>(T(0.5), std::complex<T>(0, 1));
+
+  test_mul<T>(std::complex<T>(0, 1), std::complex<T>(0.5, 0.3));
+  test_mul<T>(std::complex<T>(0, 1), T(0.5));
+  test_mul<T>(T(0.5), std::complex<T>(0, 1));
+
+  test_div<T>(std::complex<T>(0, 1), std::complex<T>(0.5, 0.3));
+  test_div<T>(std::complex<T>(0, 1), T(0.5));
+  test_div<T>(T(0.5), std::complex<T>(0, 1));
 }
 
 int main()
 {
   test_complex<float>();
   test_complex<double>();
-
-  test_plus<float>();
   return 0;
 }
