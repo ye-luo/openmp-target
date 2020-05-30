@@ -84,6 +84,31 @@ void test_div(AT a, BT b)
   }
 }
 
+#pragma omp declare reduction(+: std::complex<float>: omp_out += omp_in)
+#pragma omp declare reduction(+: std::complex<double>: omp_out += omp_in)
+
+template<typename T>
+void test_reduction()
+{
+  std::complex<T> sum(0), sum_host(0);
+  const int size = 100;
+  std::complex<T> array[size];
+  for (int i = 0; i < size; i++)
+  {
+    array[i] = {T(i), T(-i)};
+    sum_host += array[i];
+  }
+
+  #pragma omp target teams distribute parallel for map(to: array[:size]) reduction(+: sum)
+  for (int i = 0; i < size; i++)
+    sum += array[i];
+
+  if (std::abs(sum - sum_host) > 1e-6)
+  {
+    std::cout << "wrong operator / value check" << sum << " correct value " << sum_host << std::endl;
+  }
+}
+
 template<typename T>
 void test_complex()
 {
@@ -104,6 +129,8 @@ void test_complex()
   test_div<T>(std::complex<T>(0, 1), std::complex<T>(0.5, 0.3));
   test_div<T>(std::complex<T>(0, 1), T(0.5));
   test_div<T>(T(0.5), std::complex<T>(0, 1));
+
+  test_reduction<T>();
 }
 
 int main()
