@@ -38,9 +38,27 @@ void test_reduction()
     sum += array[i];
 
   if (std::abs(sum - sum_host) > 1e-6)
-  {
     std::cout << "wrong reduction value check" << sum << " correct value " << sum_host << std::endl;
+
+  const int nblock(10), block_size(10);
+  std::complex<T> block_sum[nblock];
+  #pragma omp target teams distribute map(to: array[:size]) map(from: block_sum[:nblock])
+  for (int ib = 0; ib < nblock; ib++)
+  {
+    std::complex<T> partial_sum;
+    const int istart = ib * block_size;
+    const int iend = (ib + 1) * block_size;
+    #pragma omp parallel for reduction(+: partial_sum)
+    for (int i = istart; i < iend; i++)
+      partial_sum += array[i];
+    block_sum[ib] = partial_sum;
   }
+
+  sum = 0;
+  for (int ib = 0; ib < nblock; ib++)
+    sum += block_sum[ib];
+  if (std::abs(sum - sum_host) > 1e-6)
+    std::cout << "hierarchical parallelism wrong reduction value check" << sum << " correct value " << sum_host << std::endl;
 }
 
 template<typename T>
