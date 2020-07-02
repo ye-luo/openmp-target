@@ -10,7 +10,7 @@ ifdef ENABLE_CXX
   all_targets += ${name}.cpp.x
 endif
 ifdef ENABLE_FC
-  all_targets += ${name}.f.x
+  #all_targets += ${name}.f.x
 endif
 
 all: ${all_targets}
