@@ -37,6 +37,7 @@ void deallocate(int deviceID, T* ptr, size_t n)
 int main()
 {
   const int num_devices = omp_get_num_devices();
+  std::cout << "Found " << num_devices << " devices." << std::endl;
 
   std::vector<float*> manyA;
   std::vector<float*> manyV;
