@@ -23,14 +23,14 @@ T* allocate(int deviceID, size_t n)
 {
   T* ptr = new T[n];
   std::fill_n(ptr, n, T(1));
-#pragma omp target enter data map(to : ptr[:n])
+#pragma omp target enter data map(to : ptr[:n]) device(deviceID)
   return ptr;
 }
 
 template<class T>
 void deallocate(int deviceID, T* ptr, size_t n)
 {
-#pragma omp target exit data map(delete : ptr[:n])
+#pragma omp target exit data map(delete : ptr[:n]) device(deviceID)
   delete[] ptr;
 }
 
