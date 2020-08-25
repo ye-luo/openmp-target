@@ -7,7 +7,7 @@ int * arr;
 
 void foo(int i)
 {
-  printf("devuce address %d %p\n", i, arr);
+  printf("device address %d %p\n", i, arr);
 }
 #pragma omp end declare target
 
