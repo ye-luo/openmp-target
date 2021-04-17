@@ -47,13 +47,29 @@ contains
     end subroutine destructDPArray
 end module OMPTargetArrayClass
 
+subroutine sum_on_device(array, array_size)
+  implicit none
+  real(kind = 8), intent(in) :: array(1:array_size)
+  integer, intent(in) :: array_size
+  integer :: i, Nsum
+ 
+! do a sum
+Nsum = 0
+!$omp target teams distribute parallel do reduction(+: Nsum) is_device_ptr(array)
+do i = 1, array_size
+  Nsum = Nsum + array(i)
+enddo
+
+write(*,*) "Nsum = ", Nsum
+
+end subroutine
 
 subroutine test
 use OMPTargetArrayClass
 implicit none
 type(OMPTargetArrayDP) :: abc
 integer, parameter :: Ntotal = 1000
-integer :: i, Nsum
+integer :: i
 
 call abc%resize(Ntotal)
 
@@ -63,14 +79,9 @@ do i = 1, Ntotal
   abc%array(i) = i
 enddo
 
-! do a sum
-Nsum = 0
-!$omp target teams distribute parallel do reduction(+: Nsum)
-do i = 1, Ntotal
-  Nsum = Nsum + abc%array(i)
-enddo
-
-write(*,*) "Nsum = ", Nsum
+!$omp target data use_device_ptr(abc%array)
+call sum_on_device(abc%array, size(abc%array))
+!$omp end target data
 
 !write(*,*) "end of subroutine"
 end subroutine test
