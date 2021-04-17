@@ -51,14 +51,14 @@ end module OMPTargetArrayClass
 subroutine test
 use OMPTargetArrayClass
 type(OMPTargetArrayDP) :: abc
-integer, parameter :: Ntotal = 100
+integer, parameter :: Ntotal = 1000
 integer :: Nsum
 call abc%resize(Ntotal)
 
 ! initialize values
-!$omp target teams distribute parallel do
+!$omp target teams distribute parallel do map(always, from:abc%array)
 do i = 1, Ntotal
-  abc%array(i) = i 
+  abc%array(i) = i
 enddo
 
 ! do a sum
