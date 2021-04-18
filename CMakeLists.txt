@@ -12,6 +12,10 @@ endif()
 
 if (ENABLE_CXX)
   enable_language(CXX)
+  # requires C++14 standard
+  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
 if (ENABLE_Fortran)
