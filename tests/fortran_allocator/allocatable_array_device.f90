@@ -72,6 +72,7 @@ enddo
 
 write(*,*) "Nsum = ", Nsum
 
+if (Nsum /= 500500) stop 1
 !write(*,*) "end of subroutine"
 end subroutine test
 
