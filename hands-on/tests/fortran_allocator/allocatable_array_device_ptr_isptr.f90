@@ -49,8 +49,8 @@ end module OMPTargetArrayClass
 
 subroutine sum_on_device(array, array_size)
   implicit none
-  real(kind = 8), intent(in) :: array(1:array_size)
   integer, intent(in) :: array_size
+  real(kind = 8), intent(in) :: array(1:array_size)
   integer :: i, Nsum
  
 ! do a sum
