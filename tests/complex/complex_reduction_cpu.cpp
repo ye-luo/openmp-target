@@ -1,6 +1,8 @@
 #include <iostream>
 #include <complex>
 
+bool failed = false;
+
 #if !defined(__NO_UDR)
 #pragma omp declare reduction(+: std::complex<float>: omp_out += omp_in)
 #pragma omp declare reduction(+: std::complex<double>: omp_out += omp_in)
@@ -23,7 +25,10 @@ void test_reduction()
     sum += array[i];
 
   if (std::abs(sum - sum_host) > 1e-6)
+  {
     std::cout << "wrong reduction value check" << sum << " correct value " << sum_host << std::endl;
+    failed = true;
+  }
 }
 
 int main()
@@ -32,5 +37,5 @@ int main()
   test_reduction<std::complex<float>>();
   test_reduction<double>();
   test_reduction<std::complex<double>>();
-  return 0;
+  return failed;
 }

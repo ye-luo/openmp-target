@@ -1,6 +1,8 @@
 #include <iostream>
 #include <complex>
 
+bool failed = false;
+
 template<typename T>
 void test_map()
 {
@@ -13,6 +15,7 @@ void test_map()
   if (std::abs(a - a_check) > 1e-6)
   {
     std::cout << "wrong map value check" << a_check << " correct value " << a << std::endl;
+    failed = true;
   }
 }
 
@@ -30,6 +33,7 @@ void test_plus(AT a, BT b)
   if (std::abs(c - c_host) > 1e-6)
   {
     std::cout << "wrong operator + value check" << c << " correct value " << c_host << std::endl;
+    failed = true;
   }
 }
 
@@ -47,6 +51,7 @@ void test_minus(AT a, BT b)
   if (std::abs(c - c_host) > 1e-6)
   {
     std::cout << "wrong operator - value check" << c << " correct value " << c_host << std::endl;
+    failed = true;
   }
 }
 
@@ -64,6 +69,7 @@ void test_mul(AT a, BT b)
   if (std::abs(c - c_host) > 1e-6)
   {
     std::cout << "wrong operator * value check" << c << " correct value " << c_host << std::endl;
+    failed = true;
   }
 }
 
@@ -81,6 +87,7 @@ void test_div(AT a, BT b)
   if (std::abs(c - c_host) > 1e-6)
   {
     std::cout << "wrong operator / value check" << c << " correct value " << c_host << std::endl;
+    failed = true;
   }
 }
 
@@ -112,5 +119,5 @@ int main()
   test_complex<float>();
   std::cout << "Testing double" << std::endl;
   test_complex<double>();
-  return 0;
+  return failed;
 }

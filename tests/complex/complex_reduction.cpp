@@ -1,6 +1,8 @@
 #include <iostream>
 #include <complex>
 
+bool failed = false;
+
 template<typename T>
 void test_map()
 {
@@ -13,6 +15,7 @@ void test_map()
   if (std::abs(a - a_check) > 1e-6)
   {
     std::cout << "wrong map value check" << a_check << " correct value " << a << std::endl;
+    failed = true;
   }
 }
 
@@ -38,7 +41,10 @@ void test_reduction()
     sum += array[i];
 
   if (std::abs(sum - sum_host) > 1e-6)
+  {
     std::cout << "wrong reduction value check" << sum << " correct value " << sum_host << std::endl;
+    failed = true;
+  }
 
   const int nblock(10), block_size(10);
   std::complex<T> block_sum[nblock];
@@ -58,8 +64,11 @@ void test_reduction()
   for (int ib = 0; ib < nblock; ib++)
     sum += block_sum[ib];
   if (std::abs(sum - sum_host) > 1e-6)
+  {
     std::cout << "hierarchical parallelism wrong reduction value check" << sum << " correct value " << sum_host
               << std::endl;
+    failed = true;
+  }
 }
 
 template<typename T>
@@ -75,5 +84,5 @@ int main()
   test_complex<float>();
   std::cout << "Testing double" << std::endl;
   test_complex<double>();
-  return 0;
+  return failed;
 }
