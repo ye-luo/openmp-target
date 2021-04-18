@@ -108,7 +108,9 @@ void test_complex()
 
 int main()
 {
+  std::cout << "Testing float" << std::endl;
   test_complex<float>();
+  std::cout << "Testing double" << std::endl;
   test_complex<double>();
   return 0;
 }
