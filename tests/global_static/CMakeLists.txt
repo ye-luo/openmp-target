@@ -4,6 +4,4 @@ if (ENABLE_CXX)
   add_test(NAME ${FULLNAME}.cxx COMMAND ${FULLNAME}.cxx.x)
   set_tests_properties(${FULLNAME}.cxx PROPERTIES
                        LABELS CXX)
-
-  add_library(extern_template data_extern.cpp)
 endif()
