@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 # set the project name
-project(openmp-target)
+project(openmp-target LANGUAGES NONE)
 
 OPTION(ENABLE_CXX "Enable/disable C++ tests" ON)
 OPTION(ENABLE_Fortran "Enable/disable Fortran tests" ON)
