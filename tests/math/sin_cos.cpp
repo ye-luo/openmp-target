@@ -46,5 +46,5 @@ int main()
     res = sinf(1.0f);
   }
 
-  return 0;
+  return failed;
 }

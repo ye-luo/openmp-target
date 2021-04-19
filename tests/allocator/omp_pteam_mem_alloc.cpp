@@ -1,4 +1,4 @@
-#include <cassert>
+#include <iostream>
 #include <omp.h>
 #define NTEAM 32
 #define TEAM_SIZE 128
@@ -9,6 +9,8 @@ void compute_prefactor(int team_id, T base[2])
   base[0] = team_id;
   base[1] = team_id * 2;
 }
+
+bool failed = false;
 
 template<class T>
 void test_omp_pteam_mem_alloc()
@@ -27,9 +29,15 @@ void test_omp_pteam_mem_alloc()
     sum[team_id] = local_sum;
   }
   for(int team_id = 0; team_id < NTEAM; team_id++)
-    assert(sum[team_id] == team_id * TEAM_SIZE + (TEAM_SIZE -1) * TEAM_SIZE / 2 );
+    if (sum[team_id] != team_id * TEAM_SIZE + (TEAM_SIZE -1) * TEAM_SIZE / 2 )
+    {
+      std::cout << "sum[" << team_id << "] = " << sum[team_id] << " ref " << team_id * TEAM_SIZE + (TEAM_SIZE -1) * TEAM_SIZE / 2 << std::endl;
+      failed = true;
+    }
 }
+
 int main()
 {
   test_omp_pteam_mem_alloc<int>();
+  return failed;
 }

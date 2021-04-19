@@ -51,5 +51,5 @@ int main(int argc, char **argv)
     sincosf(0.f, &s, &c);
   }
 
-  return 0;
+  return failed;
 }

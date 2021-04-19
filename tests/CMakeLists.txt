@@ -1,9 +1,10 @@
 add_subdirectory(complex)
-add_subdirectory(math)
-add_subdirectory(private)
+add_subdirectory(global_static)
 add_subdirectory(link_static_fat_bin)
 add_subdirectory(linker_outlined_func)
-add_subdirectory(global_static)
+add_subdirectory(math)
+add_subdirectory(private)
+add_subdirectory(target_task)
 
 if (ENABLE_Fortran)
   add_subdirectory(fortran_use_device_ptr)

@@ -26,7 +26,7 @@ program test_omp
     ptr_val = transfer(ptr_list(i), ptr_val)
     do j=i+1, Ntot
       if((team_ID(i) /= team_ID(j) .or. thread_ID(i) /= thread_ID(j)) .and. c_associated(ptr_list(i), ptr_list(j))) then
-        write(*,*) "ERROR identical pointer = ", ptr_val, &
+        write(*,*) "WARNING identical pointer = ", ptr_val, &
                  & " (team,thread) id (", team_ID(i), ",", thread_ID(i), ")", &
                  & " and (", team_ID(j), ",", thread_ID(j), ")";
       endif
