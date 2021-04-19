@@ -1,5 +1,5 @@
 if (ENABLE_CXX)
-  foreach(NAME target_nowait_task taskloop_offload_nowait)
+  foreach(NAME target_nowait_task taskloop_offload_nowait taskloop)
     set(FULLNAME ${NAME})
     add_executable(${FULLNAME}.cxx.x ${FULLNAME}.cpp)
     add_test(NAME ${FULLNAME}.cxx COMMAND ${FULLNAME}.cxx.x)
