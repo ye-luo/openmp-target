@@ -1,8 +1,10 @@
-#include <cassert>
+#include <stdexcept>
+#include <iostream>
 
 int main()
 {
   int a = 0;
+  std::cout << "outside a = " << a << " addr " << &a << std::endl;
   #pragma omp target map(tofrom: a) depend(out: a) nowait
   {
     int sum = 0;
@@ -13,7 +15,9 @@ int main()
 
   #pragma omp task depend(in: a) shared(a)
   {
-    assert(a == 1);
+    std::cout << "a = " << a << " addr " << &a << std::endl;
+    if (a != 1)
+      throw std::runtime_error("wrong result!");
   }
 
   #pragma omp taskwait
