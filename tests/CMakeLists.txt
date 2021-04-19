@@ -1,3 +1,4 @@
+add_subdirectory(allocator)
 add_subdirectory(complex)
 add_subdirectory(global_static)
 add_subdirectory(link_static_fat_bin)
