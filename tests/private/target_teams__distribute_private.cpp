@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <omp.h>
 
 int main()
@@ -8,8 +8,7 @@ int main()
   int team_ID[Nteams];
   float a;
   float* a_p;
-  #pragma omp target map(from:pointer[:Nteams], a_p, team_ID[:Nteams])
-  #pragma omp teams num_teams(Nteams)
+  #pragma omp target teams num_teams(Nteams) map(from:pointer[:Nteams], a_p, team_ID[:Nteams])
   {
     a_p = &a;
     #pragma omp distribute private(a)

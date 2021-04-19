@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <math.h>
+#include <cstdio>
+#include <cmath>
 int main()
 {
   printf("SUCCESS\n");

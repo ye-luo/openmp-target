@@ -1,4 +1,5 @@
 add_subdirectory(complex)
+add_subdirectory(math)
 add_subdirectory(private)
 add_subdirectory(link_static_fat_bin)
 add_subdirectory(linker_outlined_func)

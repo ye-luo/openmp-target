@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <omp.h>
 
 int main()
@@ -7,11 +7,10 @@ int main()
   void* pointer[Nteams];
   int team_ID[Nteams];
   float a;
-  float* a_p;
-  #pragma omp target teams num_teams(Nteams) map(from:pointer[:Nteams], a_p, team_ID[:Nteams])
+  #pragma omp target map(from:pointer[:Nteams], team_ID[:Nteams])
+  #pragma omp teams num_teams(Nteams) private(a)
   {
-    a_p = &a;
-    #pragma omp distribute private(a)
+    #pragma omp distribute
     for(int i = 0; i<Nteams; i++)
     {
       team_ID[i] = omp_get_team_num();
@@ -20,7 +19,6 @@ int main()
   }
 
   printf("host pointer = %p\n", &a);
-  printf("device global pointer = %p\n", a_p);
   for(int i = 0; i<Nteams; i++)
     printf("pointer[%d] = %p, team id %d\n", i, pointer[i], team_ID[i]);
   return 0;

@@ -1,5 +1,7 @@
 #include <cmath>
-#include <cassert>
+#include <iostream>
+
+bool failed = false;
 
 template<typename T>
 void test_sin_cos(T x)
@@ -12,8 +14,16 @@ void test_sin_cos(T x)
     res_cos = std::cos(x);
   }
 
-  assert(res_sin == std::sin(x));
-  assert(res_cos == std::cos(x));
+  if (res_sin != std::sin(x))
+  {
+    std::cout << "sincos sin part " << res_sin << " std::sin " << std::sin(x) << std::endl;
+    failed = true;
+  }
+  if (res_cos != std::cos(x))
+  {
+    std::cout << "sincos cos part " << res_cos << " std::cos " << std::cos(x) << std::endl;
+    failed = true;
+  }
 }
 
 int main()

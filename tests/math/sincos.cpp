@@ -1,5 +1,7 @@
 #include <cmath>
-#include <cassert>
+#include <iostream>
+
+bool failed = false;
 
 // single precision wrapper
 inline void sincos(float x, float* __restrict__ sin, float* __restrict__ cos)
@@ -17,8 +19,16 @@ void test_sincos(T x)
     sincos(x, &res_sin, &res_cos);
   }
 
-  assert(res_sin == std::sin(x));
-  assert(res_cos == std::cos(x));
+  if (res_sin != std::sin(x))
+  {
+    std::cout << "sincos sin part " << res_sin << " std::sin " << std::sin(x) << std::endl;
+    failed = true;
+  }
+  if (res_cos != std::cos(x))
+  {
+    std::cout << "sincos cos part " << res_cos << " std::cos " << std::cos(x) << std::endl;
+    failed = true;
+  }
 }
 
 int main(int argc, char **argv)

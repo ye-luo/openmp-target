@@ -5,12 +5,12 @@
 //
 ////===----------------------------------------------------------------------===//
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
 
 #define N 1000
+bool failed = false;
 
 void test_math_lib_inside_target() {
 
@@ -30,10 +30,15 @@ void test_math_lib_inside_target() {
   }
 
   for (int i = 0; i < N; ++i) {
-    assert(fabs(array[i] - pow((double)i,2)) < 0.000009);
+    if(fabs(array[i] - pow((double)i,2)) >= 0.000009)
+    {
+      std::cout << "failed array[" << i << "] " << array[i] << " ref " << pow((double)i,2) << std::endl;
+      failed = true;
+    }
   }
 }
 
 int main() {
   test_math_lib_inside_target();
+  return failed;
 }
