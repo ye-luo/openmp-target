@@ -1,5 +1,9 @@
 #include <cstdio>
+#ifdef _OPENMP
 #include <omp.h>
+#else
+int omp_get_team_num() { return 1; }
+#endif
 
 int main()
 {
