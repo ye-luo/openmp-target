@@ -26,9 +26,10 @@ int main(void)
   // Allocate device array and copy data from host -> device
   device_arr = (int *) omp_target_alloc(sz, device_id);
   omp_target_memcpy(device_arr, host_arr, sz, 0, 0, device_id, host_id);
+  #pragma omp target update to(device_arr)
 
   // Execute device kernel
-  #pragma omp target teams distribute parallel for is_device_ptr(device_arr)
+  #pragma omp target teams distribute parallel for
   for( int i = 0; i < N; i++)
   {
     foo(i);
