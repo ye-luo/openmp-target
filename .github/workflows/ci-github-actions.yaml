@@ -25,7 +25,7 @@ jobs:
         cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_Fortran_COMPILER=gfortran ..
 
     - name: Build
-      run: pwd; cd build_gcc_noomp; make -j2 -k
+      run: cd build_gcc_noomp; make -j2 -k
 
     - name: Test
-      run: ctest --output-on-failure
+      run: cd build_gcc_noomp; ctest --output-on-failure
