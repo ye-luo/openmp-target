@@ -9,5 +9,5 @@ if (ENABLE_CXX)
            COMMAND cxx.${FULLNAME}.x
            WORKING_DIRECTORY ${TESTS_BINDIR})
   set_tests_properties(cxx.${FULLNAME} PROPERTIES
-                       LABELS CXX)
+                       LABELS cxx)
 endif()

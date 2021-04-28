@@ -8,6 +8,6 @@ if (ENABLE_CXX)
              COMMAND cxx.math_${FULLNAME}.x
              WORKING_DIRECTORY ${TESTS_BINDIR})
     set_tests_properties(cxx.math_${FULLNAME} PROPERTIES
-                         LABELS CXX)
+                         LABELS cxx)
   endforeach()
 endif()
