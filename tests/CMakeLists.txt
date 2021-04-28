@@ -1,3 +1,5 @@
+set(TESTS_BINDIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+
 add_subdirectory(allocator)
 add_subdirectory(complex)
 add_subdirectory(global_static)
