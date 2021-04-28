@@ -20,8 +20,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Configure
-      run: mkdir build_gcc_noomp; cd build_gcc_noomp
-      run: cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_Fortran_COMPILER=gfortran ..
+      run: |
+        mkdir build_gcc_noomp; cd build_gcc_noomp
+        cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_Fortran_COMPILER=gfortran ..
 
     - name: Build
       run: make -j2 -k
