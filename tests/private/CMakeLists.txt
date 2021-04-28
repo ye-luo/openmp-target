@@ -16,6 +16,7 @@ if (ENABLE_Fortran)
   foreach(NAME parallel_for_private private)
     set(FULLNAME target_teams_distribute_${NAME})
     add_executable(f.${FULLNAME}.x ${FULLNAME}.f90)
+    target_link_libraries(f.${FULLNAME}.x dummy_openmp_runtime)
     set_target_properties(f.${FULLNAME}.x PROPERTIES
                           RUNTIME_OUTPUT_DIRECTORY ${TESTS_BINDIR})
     add_test(NAME f.${FULLNAME}
