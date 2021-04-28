@@ -1,4 +1,4 @@
-if (ENABLE_CXX)
+if (ENABLE_CXX AND CXX_OPENMP_RUNTIME_OKAY)
   set(FULLNAME global_pointer)
   add_executable(cxx.${FULLNAME}.x main.cpp global.cpp)
   set_target_properties(cxx.${FULLNAME}.x PROPERTIES
