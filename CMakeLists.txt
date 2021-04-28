@@ -20,7 +20,7 @@ endif()
 
 if (ENABLE_Fortran)
   enable_language(Fortran)
-  include(cmake/TestOpenMPRuntime.cmake)
+  include(cmake/TestFortranOpenMPRuntime.cmake)
 endif()
 
 enable_testing()
