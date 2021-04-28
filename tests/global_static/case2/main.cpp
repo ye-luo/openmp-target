@@ -31,8 +31,7 @@ int main(void)
   #pragma omp target teams distribute parallel for is_device_ptr(device_arr)
   for( int i = 0; i < N; i++)
   {
-    //device_arr[i] *= 2; // This works
-    foo(i);               // This does not
+    foo(i);
   }
   
   // Copy data from device -> host
