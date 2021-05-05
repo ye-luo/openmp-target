@@ -1,0 +1,31 @@
+name: GitHub Actions CI
+
+on: 
+  push:
+    branches: 
+    - master
+  pull_request:
+    branches: 
+    - master
+
+jobs:
+
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout Action
+      uses: actions/checkout@v2
+
+    - name: Configure
+      run: |
+        mkdir build_gcc_noomp; cd build_gcc_noomp
+        cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_Fortran_COMPILER=gfortran ..
+
+    - name: Build
+      run: cd build_gcc_noomp; make -j2 -k
+
+    - name: Test
+      run: cd build_gcc_noomp; ctest --output-on-failure

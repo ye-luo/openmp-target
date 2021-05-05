@@ -1,8 +1,6 @@
-if (ENABLE_CXX)
-  set(FULLNAME link_static_fat_bin)
-  add_library(mylib classA.cpp)
-  add_executable(cxx.${FULLNAME}.x main.cpp)
-  target_link_libraries(cxx.${FULLNAME}.x mylib)
+if (ENABLE_CXX AND CXX_OPENMP_RUNTIME_OKAY)
+  set(FULLNAME global_pointer)
+  add_executable(cxx.${FULLNAME}.x main.cpp global.cpp)
   set_target_properties(cxx.${FULLNAME}.x PROPERTIES
                         RUNTIME_OUTPUT_DIRECTORY ${TESTS_BINDIR})
   add_test(NAME cxx.${FULLNAME}
