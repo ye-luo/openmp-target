@@ -8,6 +8,7 @@ add_subdirectory(linker_outlined_func)
 add_subdirectory(math)
 add_subdirectory(private)
 add_subdirectory(target_task)
+add_subdirectory(omphost)
 
 if (ENABLE_Fortran)
   add_subdirectory(fortran_use_device_ptr)
