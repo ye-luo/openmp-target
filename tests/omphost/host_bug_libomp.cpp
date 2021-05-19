@@ -32,5 +32,10 @@ int main()
       std::cout << std::endl;
     }
   }
+
+  if (wrong_counts)
+    std::cout << "Wrong!" << std::endl;
+  else
+    std::cout << "Right!" << std::endl;
   return wrong_counts;
 }
