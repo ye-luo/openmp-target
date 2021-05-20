@@ -1,4 +1,4 @@
-if (ENABLE_CXX)
+if (ENABLE_CXX AND ENABLE_EXPERIMENTAL)
   set(FULLNAME omp_pteam_mem_alloc)
   add_executable(cxx.${FULLNAME}.x ${FULLNAME}.cpp)
   set_target_properties(cxx.${FULLNAME}.x PROPERTIES
