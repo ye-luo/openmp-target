@@ -19,7 +19,7 @@ void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ V, T* _
         // std::cout << "Sum[" << row << "," << col << "]: " << sum << "\n"; // Debugging                                        
         // std::cout << "Index: " << index << "\n"; // Debugging                                                                 
         Vout[index] = sum * alpha;
-        // index++; // Debugging                                                                                                 
+        index++; // Debugging                                                                                                 
       }
     // std::cout << "alpha: " << alpha << "\n"; // Debugging                                                                     
   }
