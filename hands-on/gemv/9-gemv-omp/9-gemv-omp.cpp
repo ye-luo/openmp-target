@@ -1,63 +1,110 @@
-#define N 8192
+#define N 1000
 #include "timer.h"
 
-// Base code from 1-gemv-omp.cpp                                                                                                 
-
-template<typename T> // Creates a template type T to allow passing a data type as a parameter                                    
-void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ V, T* __restrict__ Vout)
+/*
+  Multiplies two matrices of dimension n x n and passes back resulting matrix.
+ */
+template<typename T>                                     
+void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ B, T* __restrict__ result)
 {
   int index = 0;
- #pragma omp parallel for // No parallel for vanilla code                                                                        
+  // #pragma omp parallel for // No parallel for vanilla code                                                                        
   for (int row = 0; row < n; row++)
-  { // Multiplies input matrix A with vector V and returns resulting vector in Vout                                              
-    T sum                       = T(0); // Initialize sum                                                                        
+  {                                              
+    T sum                       = T(0); // Initialize sum to all 0                                                                        
     const T* __restrict__ A_row = A + row * n;
-    for (int col = 0; col < n; col++) //                                                                                         
+    const T* __restrict__ B_col;
+    for (int col = 0; col < n; col++)
       {
-        const T* __restrict__ V_col = V + col * n;
-        sum += A_row[col] * V_col[row];
-        // std::cout << "Sum[" << row << "," << col << "]: " << sum << "\n"; // Debugging                                        
-        // std::cout << "Index: " << index << "\n"; // Debugging                                                                 
-        Vout[index] = sum * alpha;
-        index++; // Debugging                                                                                                 
-      }
-    // std::cout << "alpha: " << alpha << "\n"; // Debugging                                                                     
+	sum = T(0);
+	const T* __restrict__ B_col = B + col;
+	for(int i = 0; i < n; i++)
+	  {
+	    sum += A_row[i] * B_col[i * n];
+	  }
+	index = (row * n) + col;
+	result[index] = sum * alpha;
+      } 
   }
 }
 
-template<class T>
-T* allocate(size_t n)
-{ // Creates matrix or vector                                                                                                    
-  T* ptr = new T[n]; // Creates a pointer to matrix of type T                                                                    
-  std::fill_n(ptr, n, T(1)); // ptr is the pointer to the matrix, _n is size of vector,                                          
-  //n in the parameters is how many values from start value to fill, T(1) is the value                                           
-  return ptr; // returns pointer to matrix                                                                                       
+/*
+  Prints 1 dimensional matrix of dimension n x n.
+ */
+template<typename T>
+void printMatrix(int n, T* __restrict__ A)
+{
+  for(int i = 0; i < n * n; i++)
+    std::cout << A[i];
 }
 
+/*
+  Creates 1 dimensional matrix of size n and fills with T(1).
+ */
+template<class T>
+T* allocate(size_t n)
+{                                                                                                     
+  T* ptr = new T[n];                                                                     
+  std::fill_n(ptr, n, T(1));                                            
+  return ptr;                                                                                        
+}
+
+/*
+  Frees up space from 1 dimensional matrix.
+ */
 template<class T>
 void deallocate(T* ptr, size_t n)
-{ // Frees up matrix data                                                                                                        
+{                                                                                                         
   delete[] ptr;
 }
 
 int main()
 {
-  auto* A    = allocate<float>(N * N); // Creates matrix A                                                                       
-  auto* V    = allocate<float>(N * N); // Created vector V, now creates matrix V                                                 
-  auto* Vout = allocate<float>(N * N); // Created vector Vout, now creates matrix Vout                                           
+  auto* A    = allocate<float>(N * N);                                                                        
+  auto* B    = allocate<float>(N * N);                                                  
+  auto* result = allocate<float>(N * N);
 
-    Timer local("GEMV");
-    gemv(N, 1.0f, A, V, Vout);
+  // Debugging
+  //std::cout << "Matrix A: "; printMatrix(N, A); std::cout << "\n";
+  //std::cout << "Matrix B: "; printMatrix(N, B); std::cout << "\n";
+    
+  Timer local("GEMV");
+  gemv(N, 1.0f, A, B, result);
 
-
-  for (int i = 0; i < N *  N; i++)
-    if (Vout[i] != N)
-      { // Checks if resulting matrix is all N, so this checks if Vout is all 4 if both matrices are same                        
-      std::cerr << "Vout[" << i << "] != " << N << ", wrong value is " << Vout[i] << std::endl;
-      break;
+  // Debugging
+  //std::cout << "Matrix Result: "; printMatrix(N, result); std::cout << "\n";
+   
+  // new test program
+  std::cout << "Testing 3x3 matrix multiplication.\n";
+  int dim = 3;
+  auto* C = allocate<float>(dim * dim);
+  auto* D = allocate<float>(dim * dim);
+  auto* R = allocate<float>(dim * dim);
+  std::cout << "Result calculated by hand: 010202010";
+  for(int i = 0; i < dim * dim; i++)
+    {
+      if( i % 2 == 0)
+	{
+	  C[i] = 0;
+	  D[i] = 1;
+	} else
+	{
+	  C[i] = 1;
+	  D[i] = 0;
+	}
     }
+
+  gemv(dim, 1.0f, C, D, R);
+
+  std::cout << "Matrix C: "; printMatrix(dim, C); std::cout << "\n";
+  std::cout << "Matrix D: "; printMatrix(dim, D); std::cout << "\n";
+  std::cout << "Matrix R: "; printMatrix(dim, R); std::cout << "\n";
   
   deallocate(A, N * N);
-  deallocate(V, N * N);
-  deallocate(Vout, N * N);
+  deallocate(B, N * N);
+  deallocate(result, N * N);
+
+  deallocate(C, dim * dim);
+  deallocate(D, dim * dim);
+  deallocate(R, dim * dim);
 }
