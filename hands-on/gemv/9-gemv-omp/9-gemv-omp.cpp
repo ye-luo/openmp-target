@@ -80,7 +80,7 @@ int main()
   auto* C = allocate<float>(dim * dim);
   auto* D = allocate<float>(dim * dim);
   auto* R = allocate<float>(dim * dim);
-  std::cout << "Result calculated by hand: 010202010";
+  std::cout << "Result calculated by hand: 010202010\n";
   for(int i = 0; i < dim * dim; i++)
     {
       if( i % 2 == 0)
