@@ -7,13 +7,13 @@
 template<typename T>                                     
 void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ B, T* __restrict__ result)
 {
-  int index = 0;
-  // #pragma omp parallel for // No parallel for vanilla code                                                                        
+  #pragma omp parallel for // No parallel for vanilla code                                                                 
   for (int row = 0; row < n; row++)
   {                                              
-    T sum                       = T(0); // Initialize sum to all 0                                                                        
+    T sum                       = T(0); // Initialize sum to all 0
     const T* __restrict__ A_row = A + row * n;
     const T* __restrict__ B_col;
+    int index = 0;
     for (int col = 0; col < n; col++)
       {
 	sum = T(0);
