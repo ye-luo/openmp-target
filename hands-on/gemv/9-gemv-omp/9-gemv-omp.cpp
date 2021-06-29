@@ -1,4 +1,4 @@
-#define N 1000
+#define N 4000
 #include "timer.h"
 
 /*
@@ -7,25 +7,20 @@
 template<typename T>                                     
 void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ B, T* __restrict__ result)
 {
-  #pragma omp parallel for // No parallel for vanilla code                                                                 
-  for (int row = 0; row < n; row++)
-  {                                              
-    T sum                       = T(0); // Initialize sum to all 0
-    const T* __restrict__ A_row = A + row * n;
-    const T* __restrict__ B_col;
-    int index = 0;
+#pragma omp parallel for collapse(2) // No parallel for vanilla code    
+  for (int row = 0; row < n; row++)                                              
     for (int col = 0; col < n; col++)
       {
-	sum = T(0);
+	const T* __restrict__ A_row = A + row * n;
+	T sum(0);
 	const T* __restrict__ B_col = B + col;
 	for(int i = 0; i < n; i++)
 	  {
 	    sum += A_row[i] * B_col[i * n];
 	  }
-	index = (row * n) + col;
+	const int index = (row * n) + col;
 	result[index] = sum * alpha;
       } 
-  }
 }
 
 /*
