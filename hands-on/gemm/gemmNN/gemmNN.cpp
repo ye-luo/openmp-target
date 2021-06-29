@@ -53,6 +53,38 @@ void deallocate(T* ptr, size_t n)
   delete[] ptr;
 }
 
+void testtbt()
+{
+std::cout << "Testing 3x3 matrix multiplication.\n";
+  int dim = 3;
+  auto* C = allocate<float>(dim * dim);
+  auto* D = allocate<float>(dim * dim);
+  auto* R = allocate<float>(dim * dim);
+  std::cout << "Result calculated by hand: 010202010\n";
+  for(int i = 0; i < dim * dim; i++)
+    {
+      if( i % 2 == 0)
+        {
+          C[i] = 0;
+          D[i] = 1;
+        } else
+        {
+          C[i] = 1;
+          D[i] = 0;
+        }
+    }
+
+  gemv(dim, 1.0f, C, D, R);
+
+  std::cout << "Matrix C: "; printMatrix(dim, C); std::cout << "\n";
+  std::cout << "Matrix D: "; printMatrix(dim, D); std::cout << "\n";
+  std::cout << "Matrix R: "; printMatrix(dim, R); std::cout << "\n";
+
+  deallocate(C, dim * dim);
+  deallocate(D, dim * dim);
+  deallocate(R, dim * dim);
+}
+
 int main()
 {
   auto* A    = allocate<float>(N * N);                                                                        
@@ -66,40 +98,13 @@ int main()
   Timer local("GEMV");
   gemv(N, 1.0f, A, B, result);
 
+  testtbt();
+
   // Debugging
   //std::cout << "Matrix Result: "; printMatrix(N, result); std::cout << "\n";
    
-  // new test program
-  std::cout << "Testing 3x3 matrix multiplication.\n";
-  int dim = 3;
-  auto* C = allocate<float>(dim * dim);
-  auto* D = allocate<float>(dim * dim);
-  auto* R = allocate<float>(dim * dim);
-  std::cout << "Result calculated by hand: 010202010\n";
-  for(int i = 0; i < dim * dim; i++)
-    {
-      if( i % 2 == 0)
-	{
-	  C[i] = 0;
-	  D[i] = 1;
-	} else
-	{
-	  C[i] = 1;
-	  D[i] = 0;
-	}
-    }
-
-  gemv(dim, 1.0f, C, D, R);
-
-  std::cout << "Matrix C: "; printMatrix(dim, C); std::cout << "\n";
-  std::cout << "Matrix D: "; printMatrix(dim, D); std::cout << "\n";
-  std::cout << "Matrix R: "; printMatrix(dim, R); std::cout << "\n";
-  
   deallocate(A, N * N);
   deallocate(B, N * N);
   deallocate(result, N * N);
 
-  deallocate(C, dim * dim);
-  deallocate(D, dim * dim);
-  deallocate(R, dim * dim);
 }
