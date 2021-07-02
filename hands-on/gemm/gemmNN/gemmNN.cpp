@@ -1,4 +1,4 @@
-#define N 4000
+#define N 1000
 #include "timer.h"
 
 /*
@@ -7,7 +7,7 @@
 template<typename T>                                     
 void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ B, T* __restrict__ result)
 {
-#pragma omp target teams distribute parallel for collapse(2) map(to:A, B) map(from:result)
+#pragma omp target teams distribute collapse(2) map(to:A[:n*n], B[:n*n]) map(from:result[:n*n])
   // target works with teams and map to offload data to GPU
   // teams distribute breaks execution of loops into teams of threads
   // map:to offloads data to GPU
@@ -18,6 +18,8 @@ void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ B, T* _
 	const T* __restrict__ A_row = A + row * n;
 	T sum(0);
 	const T* __restrict__ B_col = B + col;
+	// can move pragma for here
+#pragma omp parallel for reduction(+:sum)
 	for(int i = 0; i < n; i++)
 	  {
 	    sum += A_row[i] * B_col[i * n];
