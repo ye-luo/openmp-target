@@ -74,7 +74,7 @@ int main()
       if (i%2)
         gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
       else
-        gemv_host(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
+        gemv_host(N/16, 1.0f, manyA[i], manyV[i], manyVout[i]);
   }
 
   for (int i = 0; i < Num_calc; i++)
@@ -83,8 +83,6 @@ int main()
     if (i%2)
     {
 #pragma omp target update from(Vout[:N])
-    }
-
     for (int j = 0; j < N; j++)
       if (Vout[j] != N)
       {
@@ -92,6 +90,7 @@ int main()
                   << std::endl;
         break;
       }
+    }
 
     deallocate(manyA[i], N * N);
     deallocate(manyV[i], N);
