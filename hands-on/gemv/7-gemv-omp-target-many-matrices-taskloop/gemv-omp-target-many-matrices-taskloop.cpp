@@ -1,17 +1,30 @@
-#define N 512
+#define N 4096
 #include <vector>
 #include <sstream>
 #include "timer.h"
 
 template<typename T>
-void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ V, T* __restrict__ Vout, int run_on_device)
+void gemv(int n, T alpha, const T* __restrict__ A, const T* __restrict__ V, T* __restrict__ Vout)
 {
-#pragma omp target teams distribute map(to : A[:n * n], V[:n]) map(from : Vout[:n]) if(run_on_device) nowait
+#pragma omp target teams distribute map(to : A[:n * n], V[:n]) map(from : Vout[:n]) nowait
   for (int row = 0; row < n; row++)
   {
     T sum                       = T(0);
     const T* __restrict__ A_row = A + row * n;
 #pragma omp parallel for reduction(+ : sum)
+    for (int col = 0; col < n; col++)
+      sum += A_row[col] * V[col];
+    Vout[row] = sum * alpha;
+  }
+}
+
+template<typename T>
+void gemv_host(int n, T alpha, const T* __restrict__ A, const T* __restrict__ V, T* __restrict__ Vout)
+{
+  for (int row = 0; row < n; row++)
+  {
+    T sum                       = T(0);
+    const T* __restrict__ A_row = A + row * n;
     for (int col = 0; col < n; col++)
       sum += A_row[col] * V[col];
     Vout[row] = sum * alpha;
@@ -40,7 +53,7 @@ int main()
   std::vector<float*> manyV;
   std::vector<float*> manyVout;
 
-  const int Num_calc = 4096;
+  const int Num_calc = 64;
   for (int i = 0; i < Num_calc; i++)
   {
     manyA.push_back(allocate<float>(N * N));
@@ -48,12 +61,9 @@ int main()
     manyVout.push_back(allocate<float>(N));
   }
 
-  {
-    // warm up
-#pragma omp parallel for
-    for (int i = 0; i < Num_calc; i++)
-      gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i], 1);
-  }
+  // warm up
+#pragma omp target
+  { }
 
   {
     Timer local("multiGEMV parallel taskloop");
@@ -61,13 +71,20 @@ int main()
     #pragma omp single
     #pragma omp taskloop
     for (int i = 0; i < Num_calc; i++)
-      gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i], i%2);
+      if (i%2)
+        gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
+      else
+        gemv_host(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
   }
 
   for (int i = 0; i < Num_calc; i++)
   {
     auto* __restrict__ Vout = manyVout[i];
+    if (i%2)
+    {
 #pragma omp target update from(Vout[:N])
+    }
+
     for (int j = 0; j < N; j++)
       if (Vout[j] != N)
       {
