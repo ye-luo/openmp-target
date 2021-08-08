@@ -62,8 +62,11 @@ int main()
   }
 
   // warm up
-#pragma omp target
-  { }
+#pragma omp parallel
+  {
+#pragma omp target nowait
+    { int a = 1; }
+  }
 
   {
     Timer local("multiGEMV parallel taskloop");
