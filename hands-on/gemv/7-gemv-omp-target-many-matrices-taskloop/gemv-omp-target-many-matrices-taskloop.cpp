@@ -1,4 +1,4 @@
-#define N 4096
+#define N 256
 #include <vector>
 #include <sstream>
 #include "timer.h"
@@ -53,7 +53,7 @@ int main()
   std::vector<float*> manyV;
   std::vector<float*> manyVout;
 
-  const int Num_calc = 64;
+  const int Num_calc = 512;
   for (int i = 0; i < Num_calc; i++)
   {
     manyA.push_back(allocate<float>(N * N));
@@ -69,7 +69,7 @@ int main()
     Timer local("multiGEMV parallel taskloop");
 #pragma omp parallel
     #pragma omp single
-    #pragma omp taskloop
+    #pragma omp taskloop untied
     for (int i = 0; i < Num_calc; i++)
       if (i%2)
         gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
