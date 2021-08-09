@@ -72,7 +72,7 @@ int main()
     Timer local("multiGEMV parallel taskloop");
 #pragma omp parallel
     #pragma omp single
-    #pragma omp taskloop untied
+    #pragma omp taskloop
     for (int i = 0; i < Num_calc; i++)
       if (i%2)
         gemv(N, 1.0f, manyA[i], manyV[i], manyVout[i]);
