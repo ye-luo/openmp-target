@@ -1,2 +1,2 @@
-int foo()
+int boo()
 { return 0; }
