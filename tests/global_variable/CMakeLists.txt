@@ -1,2 +1,3 @@
 add_subdirectory(global_static)
+add_subdirectory(constexpr)
 add_subdirectory(global_pointer)
