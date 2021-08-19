@@ -6,9 +6,10 @@
 
 constexpr size_t N = 128;
 
-int main()
+template<typename T>
+void test_sin_simd()
 {
-  double phase[N], sinval[N];
+  T phase[N], sinval[N];
   phase[0] = 0.0;
   phase[1] = 0.1;
   phase[2] = 0.2;
@@ -30,4 +31,10 @@ int main()
   assert( std::fabs(sinval[1] - 0.099833416646828) < 1e-6);
   assert( std::fabs(sinval[2] - 0.19866933079506) < 1e-6);
   assert( std::fabs(sinval[3] - 0.29552020666134) < 1e-6);
+}
+
+int main()
+{
+  test_sin_simd<float>();
+  test_sin_simd<double>();
 }
