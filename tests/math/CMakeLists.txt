@@ -1,13 +1,13 @@
 if (ENABLE_CXX)
   foreach(NAME FP_ZERO header_only modf sqrt_simd sin_cos sin_simd sincos sincos_simd sincos_simd_template)
     set(FULLNAME ${NAME})
-    add_executable(cxx.math_${FULLNAME}.x ${FULLNAME}.cpp)
-    set_target_properties(cxx.math_${FULLNAME}.x PROPERTIES
+    set(EXE_NAME cxx.math_${FULLNAME})
+    add_executable(${EXE_NAME} ${FULLNAME}.cpp)
+    set_target_properties(${EXE_NAME} PROPERTIES
                           RUNTIME_OUTPUT_DIRECTORY ${TESTS_BINDIR})
-    add_test(NAME cxx.math_${FULLNAME}
-             COMMAND cxx.math_${FULLNAME}.x
+    add_test(NAME ${EXE_NAME}
+             COMMAND $<TARGET_FILE:${EXE_NAME}>
              WORKING_DIRECTORY ${TESTS_BINDIR})
-    set_tests_properties(cxx.math_${FULLNAME} PROPERTIES
-                         LABELS cxx)
+    set_tests_properties(${EXE_NAME} PROPERTIES LABELS cxx)
   endforeach()
 endif()

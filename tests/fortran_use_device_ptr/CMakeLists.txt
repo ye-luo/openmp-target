@@ -1,9 +1,10 @@
 set(FULLNAME use_device_ptr_target)
-add_executable(f.${FULLNAME}.x ${FULLNAME}.f90)
-set_target_properties(f.${FULLNAME}.x PROPERTIES
+set(EXE_NAME f.${FULLNAME})
+add_executable(${EXE_NAME} ${FULLNAME}.f90)
+set_target_properties(${EXE_NAME} PROPERTIES
                      RUNTIME_OUTPUT_DIRECTORY ${TESTS_BINDIR})
-add_test(NAME f.${FULLNAME}
-         COMMAND f.${FULLNAME}.x
+add_test(NAME ${EXE_NAME}
+         COMMAND $<TARGET_NAME:${EXE_NAME}>
          WORKING_DIRECTORY ${TESTS_BINDIR})
-set_tests_properties(f.${FULLNAME} PROPERTIES
+set_tests_properties(${EXE_NAME} PROPERTIES
                      LABELS fortran)
