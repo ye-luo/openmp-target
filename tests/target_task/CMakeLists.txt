@@ -1,5 +1,5 @@
 if (ENABLE_CXX)
-  foreach(NAME target_nowait_task taskloop_offload_nowait taskloop)
+  foreach(NAME target_nowait_task taskloop_offload_nowait taskloop omp-task-bug)
     set(FULLNAME ${NAME})
     set(EXE_NAME cxx.${FULLNAME})
     add_executable(${EXE_NAME} ${FULLNAME}.cpp)
