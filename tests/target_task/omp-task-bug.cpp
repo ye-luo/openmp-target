@@ -1,7 +1,12 @@
 #include <iostream>
 #include <numeric>
-#include <omp.h>
 #include <vector>
+#ifdef _OPENMP
+#include <omp.h>
+#else
+int omp_get_thread_num() { return 1; }
+int omp_get_max_threads() { return 1; }
+#endif
 
 template<typename T>
 struct MyProblem
