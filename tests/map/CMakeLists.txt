@@ -1,5 +1,5 @@
 if (ENABLE_CXX)
-  foreach(NAME pointer_api)
+  foreach(NAME pointer_api this_with_virtual)
     set(FULLNAME ${NAME})
     set(EXE_NAME cxx.map_${FULLNAME})
     add_executable(${EXE_NAME} ${FULLNAME}.cpp)
