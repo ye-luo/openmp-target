@@ -7,7 +7,7 @@
 
 constexpr size_t N = 128;
 
-inline void sincos(float phi, float* s, float* c)
+inline void sincos(float phi, float* __restrict__ s, float* __restrict__ c)
 {
   sincosf(phi, s, c);
 }
