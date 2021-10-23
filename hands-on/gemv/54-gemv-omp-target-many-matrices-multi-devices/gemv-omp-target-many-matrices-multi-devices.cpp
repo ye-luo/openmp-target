@@ -67,7 +67,11 @@ int main()
       {
         std::cerr << "Calculation " << i << " Vout[" << j << "] != " << N << ", wrong value is " << Vout[j]
                   << std::endl;
+#if defined(THROW_FAIL)
+        throw;
+#else
         break;
+#endif
       }
 
     deallocate(i % num_devices, manyA[i], N * N);

@@ -48,7 +48,11 @@ int main()
     if (Vout[i] != N)
     {
       std::cerr << "Vout[" << i << "] != " << N << ", wrong value is " << Vout[i] << std::endl;
+#if defined(THROW_FAIL)
+      throw;
+#else
       break;
+#endif
     }
 
   deallocate(A, N * N);

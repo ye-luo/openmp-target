@@ -39,4 +39,5 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "PGI" OR CMAKE_CXX_COMPILER_ID MATCHES "NVHPC"
   add_definitions(-D__NO_UDR)
 endif()
 
+add_subdirectory(hands-on)
 add_subdirectory(tests)

@@ -57,7 +57,11 @@ int main()
       {
         std::cerr << "Calculation " << i << " Vout[" << j << "] != " << N << ", wrong value is " << manyVout[i][j]
                   << std::endl;
+#if defined(THROW_FAIL)
+        throw;
+#else
         break;
+#endif
       }
 
     deallocate(manyA[i], N * N);
