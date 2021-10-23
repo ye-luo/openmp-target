@@ -1,7 +1,9 @@
 #define N 4096
 #include <vector>
-#include <omp.h>
 #include "timer.h"
+#if defined(_OPEMMP)
+#include <omp.h>
+#endif
 
 template<typename T>
 void gemv(int deviceID, int n, T alpha, const T* __restrict__ A, const T* __restrict__ V, T* __restrict__ Vout)
@@ -36,7 +38,11 @@ void deallocate(int deviceID, T* ptr, size_t n)
 
 int main()
 {
+#if defined(_OPEMMP)
   const int num_devices = omp_get_num_devices();
+#else
+  const int num_devices = 1;
+#endif
   std::cout << "Found " << num_devices << " devices." << std::endl;
 
   std::vector<float*> manyA;
