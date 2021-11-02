@@ -1,5 +1,5 @@
 if (ENABLE_CXX)
-  foreach(NAME FP_ZERO header_only modf sqrt_simd sin_cos sin_simd sincos sincos_simd sincos_simd_template)
+  foreach(NAME FP_ZERO header_only modf sqrt_simd sin_cos sin_simd sincos sincos_simd sincos_simd_template modf_in_branch)
     set(FULLNAME ${NAME})
     set(EXE_NAME cxx.math_${FULLNAME})
     add_executable(${EXE_NAME} ${FULLNAME}.cpp)
