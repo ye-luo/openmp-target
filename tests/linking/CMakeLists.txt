@@ -1,2 +1,3 @@
 add_subdirectory(link_static_fat_bin)
 add_subdirectory(linker_outlined_func)
+add_subdirectory(two_identical_templates)
