@@ -25,14 +25,28 @@ void test_map()
 #endif
 
 template<typename T>
+class initiator
+{
+public:
+  static T value(int i) { return T(i); }
+};
+
+template<typename T>
+class initiator<std::complex<T>>
+{
+public:
+  static std::complex<T> value(int i) { return {T(i), T(-i)}; }
+};
+
+template<typename T>
 void test_reduction()
 {
-  std::complex<T> sum(0), sum_host(0);
+  T sum(0), sum_host(0);
   const int size = 100;
-  std::complex<T> array[size];
+  T array[size];
   for (int i = 0; i < size; i++)
   {
-    array[i] = {T(i), T(-i)};
+    array[i] = initiator<T>::value(i);
     sum_host += array[i];
   }
 
@@ -47,11 +61,11 @@ void test_reduction()
   }
 
   const int nblock(10), block_size(10);
-  std::complex<T> block_sum[nblock];
+  T block_sum[nblock];
 #pragma omp target teams distribute map(to : array[:size]) map(from : block_sum[:nblock])
   for (int ib = 0; ib < nblock; ib++)
   {
-    std::complex<T> partial_sum;
+    T partial_sum(0);
     const int istart = ib * block_size;
     const int iend   = (ib + 1) * block_size;
 #pragma omp parallel for reduction(+ : partial_sum)
@@ -72,14 +86,27 @@ void test_reduction()
 }
 
 template<typename T>
+void test_real()
+{
+  test_reduction<T>();
+}
+
+template<typename T>
 void test_complex()
 {
   test_map<T>();
-  test_reduction<T>();
+  test_reduction<std::complex<T>>();
 }
 
 int main()
 {
+  std::cout << "Testing real" << std::endl;
+  std::cout << "Testing float" << std::endl;
+  test_real<float>();
+  std::cout << "Testing double" << std::endl;
+  test_real<double>();
+
+  std::cout << "Testing complex" << std::endl;
   std::cout << "Testing float" << std::endl;
   test_complex<float>();
   std::cout << "Testing double" << std::endl;
