@@ -17,12 +17,16 @@ jobs:
 
     steps:
     - name: Checkout Action
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
+    - name: Setup Dependencies
+      run: |
+        apt install g++-10 libgomp1
 
     - name: Configure
       run: |
         mkdir build_gcc_noomp; cd build_gcc_noomp
-        cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_Fortran_COMPILER=gfortran ..
+        cmake -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_Fortran_COMPILER=gfortran-10 ..
 
     - name: Build
       run: cd build_gcc_noomp; make -j2 -k
