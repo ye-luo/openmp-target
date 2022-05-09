@@ -21,7 +21,7 @@ jobs:
 
     - name: Setup Dependencies
       run: |
-        apt install g++-10 libgomp1
+        sudo apt install g++-10 libgomp1
 
     - name: Configure
       run: |
