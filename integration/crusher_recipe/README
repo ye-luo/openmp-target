@@ -66,5 +66,5 @@ srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S
 cd -
 
 cd tests/performance/NiO/dmc-a512-e6144-DU64-cpu_driver
-srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S128-dmc.xml
+srun --gpus-per-task 1 -c 16 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S128-dmc.xml
 cd -
