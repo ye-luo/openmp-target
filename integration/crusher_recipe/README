@@ -1,0 +1,70 @@
+WORKSPACE=`pwd`
+
+# set up compiler wrappers
+module load cmake/3.22.2
+module load cray-fftw
+module load openblas/0.3.17-omp
+module load boost/1.77.0-cxx17
+# private module until OLCF provides MPI compiler wrappers for afar compilers.
+module use $WORKSPACE/modules
+module load mpiwrappers/cray-mpich-afar
+module load cray-hdf5-parallel
+
+# clone qmcpack source
+git clone --shallow-since=2022-08-01 https://github.com/QMCPACK/qmcpack.git
+git co d029f1f2c976c39486b5122cd81566f93afb2461
+
+# prepare test h5 files. Files are not small. Download once and soft link them when needed.
+mkdir -p $WORKSPACE/QMCDATA/NiO
+cd $WORKSPACE/QMCDATA/NiO
+curl -L -O -J https://m.box.com/file/284382973675/download?shared_link=https%3A%2F%2Fanl.box.com%2Fs%2Fyxz1ic4kxtdtgpva5hcmlom9ixfl3v3c
+curl -L -O -J https://m.box.com/file/284381326469/download?shared_link=https%3A%2F%2Fanl.box.com%2Fs%2Fyxz1ic4kxtdtgpva5hcmlom9ixfl3v3c
+curl -L -O -J https://m.box.com/file/284383098200/download?shared_link=https%3A%2F%2Fanl.box.com%2Fs%2Fyxz1ic4kxtdtgpva5hcmlom9ixfl3v3c
+curl -L -O -J https://m.box.com/file/130886492400/download?shared_link=https%3A%2F%2Fanl.box.com%2Fs%2Fyxz1ic4kxtdtgpva5hcmlom9ixfl3v3c
+curl -L -O -J https://m.box.com/file/130890136573/download?shared_link=https%3A%2F%2Fanl.box.com%2Fs%2Fyxz1ic4kxtdtgpva5hcmlom9ixfl3v3c
+curl -L -O -J https://m.box.com/file/178686464361/download?shared_link=https%3A%2F%2Fanl.box.com%2Fs%2Fyxz1ic4kxtdtgpva5hcmlom9ixfl3v3c
+cd -
+
+# build qmcpack
+mkdir build_crusher_afar_offload_cuda2hip_real_MP
+cd build_crusher_afar_offload_cuda2hip_real_MP
+
+cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DQMC_MIXED_PRECISION=ON \
+      -DENABLE_OFFLOAD=ON -DENABLE_CUDA=ON -DQMC_CUDA2HIP=ON -DHIP_ARCH=gfx90a \
+      -DMPIEXEC_EXECUTABLE=`which srun` -DQMC_DATA=$WORKSPACE/QMCDATA ../qmcpack
+
+# grab a node
+salloc -A MAT189 -t 00:60:00 -N 1
+
+# hdf5 workaround
+export HDF5_USE_FILE_LOCKING=FALSE
+
+# run all the deterministic tests
+ctest -R deter -j32
+
+# run performance tests. test files are inside the build directory
+# please run each of them as an individual test because test may hang due to bugs in AMD runtime.
+
+cd tests/performance/NiO/dmc-a4-e48-DU8-batched_driver
+srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S1-dmc.xml
+cd -
+
+cd tests/performance/NiO/dmc-a8-e96-DU16-batched_driver
+srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S2-dmc.xml
+cd -
+
+cd tests/performance/NiO/dmc-a16-e192-DU16-batched_driver
+srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S4-dmc.xml
+cd -
+
+cd tests/performance/NiO/dmc-a32-e384-DU32-batched_driver
+srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S8-dmc.xml
+cd -
+
+cd tests/performance/NiO/dmc-a64-e768-DU32-batched_driver
+srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S16-dmc.xml
+cd -
+
+cd tests/performance/NiO/dmc-a512-e6144-DU64-cpu_driver
+srun --gpus-per-task 1 -c 4 --gpu-bind=closest ../../../../bin/qmcpack NiO-fcc-S128-dmc.xml
+cd -
