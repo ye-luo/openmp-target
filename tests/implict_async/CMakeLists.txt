@@ -1,5 +1,5 @@
 if (ENABLE_CXX AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  foreach(NAME llvm_alloc_host)
+  foreach(NAME llvm_alloc_host llvm_alloc_host_data)
     set(FULLNAME ${NAME})
     set(EXE_NAME cxx.${FULLNAME})
     add_executable(${EXE_NAME} ${FULLNAME}.cpp)
