@@ -48,6 +48,7 @@ void test_size(size_t N)
 
 int main()
 {
+  std::cout << "Start testing!" << std::endl;
   test_size(9);
   test_size(3);
   test_size(5);
@@ -57,11 +58,13 @@ int main()
   test_size(17);
   test_size(25);
   test_size(31);
-  test_size(32);
+  test_size(35);
+  test_size(65);
   test_size(8);
   test_size(16);
   test_size(32);
   test_size(64);
   test_size(128);
   test_size(256);
+  std::cout << "End testing!" << std::endl;
 }
