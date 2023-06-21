@@ -6,7 +6,7 @@ subroutine sum_on_device(array, array_size)
  
 ! do a sum
 Nsum = 0
-!$omp target teams distribute parallel do reduction(+: Nsum) is_device_ptr(array)
+!$omp target teams distribute parallel do reduction(+: Nsum) has_device_addr(array)
 do i = 1, array_size
   Nsum = Nsum + array(i)
 enddo
@@ -33,7 +33,7 @@ do i = 1, Ntotal
   abc_data(i) = i
 enddo
 
-!$omp target data use_device_ptr(abc_data)
+!$omp target data use_device_addr(abc_data)
 call sum_on_device(abc_data, size(abc_data))
 !$omp end target data
 

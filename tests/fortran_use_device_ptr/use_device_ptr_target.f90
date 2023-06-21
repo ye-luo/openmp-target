@@ -12,7 +12,7 @@ program test_use_device_ptr
       implicit none
       integer :: lda
       double precision, target:: a(lda,lda) ! need target attribute to use c_loc
-      !$omp target data use_device_ptr(a) map(a)
+      !$omp target data use_device_addr(a) map(a)
         !call cublas_dgemm('T','N',M,N,K,alpha,c_loc(A),LDA,c_loc(b) +,LDB,beta,c_loc(c),LDC)
       !$omp end target data
     end subroutine
