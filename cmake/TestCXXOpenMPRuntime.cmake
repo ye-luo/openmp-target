@@ -1,22 +1,37 @@
-set(TEST_OPENMP_RUNTIME_SOURCE ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/try_openmp_runtime.cpp)
-file(WRITE ${TEST_OPENMP_RUNTIME_SOURCE}
+include(CheckCXXSourceCompiles)
+
+list(PREPEND OPENMP_CXX_COMPILE_OPTIONS ${OPENMP_CXX_FLAGS} ${OPENMP_FLAGS})
+list(PREPEND OPENMP_CXX_LINK_OPTIONS ${OPENMP_CXX_FLAGS} ${OPENMP_FLAGS})
+
+set(CMAKE_REQUIRED_FLAGS ${OPENMP_CXX_COMPILE_OPTIONS})
+#set(CMAKE_REQUIRED_LINK_OPTIONS ${OPENMP_CXX_LINK_OPTIONS})
+
+check_cxx_source_compiles(
 "#include <omp.h>
 int main()
-{
-  int a = omp_get_num_threads();
-}
-")
+{ int a = omp_get_num_threads(); }"
+CXX_OPENMP_RUNTIME_OKAY
+)
 
+add_library(qmc_openmp_cxx INTERFACE)
 
-try_compile(CXX_OPENMP_RUNTIME_OKAY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp
-            ${TEST_OPENMP_RUNTIME_SOURCE}
-            OUTPUT_VARIABLE COMPILE_OUTPUT)
-
-if (NOT CXX_OPENMP_RUNTIME_OKAY)
-  set(COMPILE_FAIL_OUTPUT cxx_openmp_runtime_compile_fail.txt)
-  file(WRITE "${CMAKE_BINARY_DIR}/${COMPILE_FAIL_OUTPUT}" "${COMPILE_OUTPUT}")
-  message(STATUS "C++ OpenMP functionality check failed!"
-                 "See compiler output at ${COMPILE_FAIL_OUTPUT}")
+if (CXX_OPENMP_RUNTIME_OKAY)
+  message(STATUS "C++ OpenMP functionality check failed!")
 else()
   message(STATUS "C++ OpenMP functionality check pass")
+  target_compile_options(qmc_openmp_cxx INTERFACE "${OPENMP_CXX_COMPILE_OPTIONS}")
+  target_link_options(qmc_openmp_cxx INTERFACE "${OPENMP_CXX_LINK_OPTIONS}")
+endif()
+
+check_cxx_source_compiles(
+"#include <omp.h>
+int main()
+{ int a = omp_target_is_present(nullptr, 0); }"
+CXX_OFFLOAD_RUNTIME_OKAY
+)
+
+if (CXX_OFFLOAD_RUNTIME_OKAY)
+  message(STATUS "CXX compiler has OpenMP offload runtime library.")
+else()
+  message(STATUS "CXX compiler doesn't have OpenMP offload runtime library.")
 endif()
