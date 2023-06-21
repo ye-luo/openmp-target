@@ -105,11 +105,16 @@ subroutine fill_density(density)
   call density%resize(test_size)
   density_data => density%data()
   write(*,*) "density_data size ", size(density_data)
+  do i = 1, test_size
+    density_data(i) = 1.
+  enddo
+  !$omp target update to(density_data)
   !$omp target teams distribute parallel do map(always, from: density_data)
   do i = 1, test_size
-    density_data(i) = i * 1.
+    density_data(i) = density_data(i) + i * 1.
   enddo
 
+  if (density_data(3).ne.4.) stop 1
 end subroutine
 
 program abc
