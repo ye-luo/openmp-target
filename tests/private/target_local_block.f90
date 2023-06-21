@@ -15,12 +15,14 @@ program main
   if (collect_a == 20) then
      print *,"Success!"
   else
+     write(*,*) "collect_a expected 20, now = ", collect_a
      stop 1
   endif
 
   if (a == 10) then
      print *,"Success!"
   else
+     write(*,*) "a expected120, now = ", a
      stop 1
   endif
 
