@@ -1,10 +1,12 @@
 #include <iostream>
+#include <memory>
 #include <numeric>
 #include <vector>
 #ifdef _OPENMP
 #include <omp.h>
 #else
-int omp_get_thread_num() { return 1; }
+int omp_get_thread_num() { return 0; }
+int omp_get_num_threads() { return 1; }
 int omp_get_max_threads() { return 1; }
 #endif
 
@@ -90,7 +92,7 @@ int main(int argc, char** argv)
 {
   const int np = omp_get_max_threads();
 
-  std::vector<MyProblem<float>*> problems(np * 4);
+  std::vector<std::unique_ptr<MyProblem<float>>> problems(np * 4);
 
 #pragma omp parallel
   {
@@ -99,7 +101,7 @@ int main(int argc, char** argv)
     for (int iw = 0; iw < 4; iw++)
     {
       int I       = ip * 4 + iw;
-      problems[I] = new MyProblem<float>(np * 4);
+      problems[I] = std::make_unique<MyProblem<float>>(np * 4);
       problems[I]->setV(I);
     }
 
