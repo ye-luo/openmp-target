@@ -1,4 +1,4 @@
-if (ENABLE_CXX AND CXX_OPENMP_RUNTIME_OKAY)
+if (ENABLE_CXX AND CXX_OFFLOAD_RUNTIME_OKAY)
   set(FULLNAME global_pointer)
   set(EXE_NAME cxx.${FULLNAME})
   add_executable(${EXE_NAME} main.cpp global.cpp)
