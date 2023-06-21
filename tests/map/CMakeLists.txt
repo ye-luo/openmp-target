@@ -13,7 +13,7 @@ if (ENABLE_CXX AND CXX_OFFLOAD_RUNTIME_OKAY)
 endif()
 
 if (ENABLE_Fortran)
-  foreach(NAME implicit_map_alloc dualspace)
+  foreach(NAME implicit_map_alloc)
     set(FULLNAME ${NAME})
     set(EXE_NAME f.map_${FULLNAME})
     add_executable(${EXE_NAME} ${FULLNAME}.f90)

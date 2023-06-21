@@ -17,25 +17,24 @@ if (Nsum /= 500500) stop 1
 end subroutine
 
 subroutine test
-use OMPTargetArrayClass
+use dualspace
 implicit none
-type(OMPTargetArrayDP), target :: abc
+type(dualspace_double_type) :: abc
+real(8), dimension(:), pointer :: abc_data
 integer, parameter :: Ntotal = 1000
 integer :: i
-real(kind = 8), pointer :: array_ptr(:)
 
 call abc%resize(Ntotal)
-
-array_ptr => abc%array
+abc_data => abc%data()
 
 ! initialize values
-!$omp target teams distribute parallel do map(always, from:array_ptr)
+!$omp target teams distribute parallel do map(always, from:abc_data)
 do i = 1, Ntotal
-  array_ptr(i) = i
+  abc_data(i) = i
 enddo
 
-!$omp target data use_device_ptr(array_ptr)
-call sum_on_device(array_ptr, size(array_ptr))
+!$omp target data use_device_ptr(abc_data)
+call sum_on_device(abc_data, size(abc_data))
 !$omp end target data
 
 !write(*,*) "end of subroutine"

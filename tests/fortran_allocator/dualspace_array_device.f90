@@ -1,23 +1,25 @@
 subroutine test
-use OMPTargetArrayClass
+use dualspace
 implicit none
-type(OMPTargetArrayDP) :: abc
+type(dualspace_double_type) :: abc
+real(8), dimension(:), pointer :: abc_data 
 integer, parameter :: Ntotal = 1000
 integer :: i, Nsum
 
 call abc%resize(Ntotal)
 
 ! initialize values
-!$omp target teams distribute parallel do map(always, from:abc%array)
+abc_data => abc%data()
+!$omp target teams distribute parallel do map(always, from:abc_data)
 do i = 1, Ntotal
-  abc%array(i) = i
+  abc_data(i) = i
 enddo
 
 ! do a sum
 Nsum = 0
 !$omp target teams distribute parallel do reduction(+: Nsum)
 do i = 1, Ntotal
-  Nsum = Nsum + abc%array(i)
+  Nsum = Nsum + abc_data(i)
 enddo
 
 write(*,*) "Nsum = ", Nsum
