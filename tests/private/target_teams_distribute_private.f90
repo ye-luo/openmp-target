@@ -1,5 +1,6 @@
 program test_omp
   use iso_c_binding, only: c_associated, c_loc, c_ptr, c_long
+  use omp_lib
   implicit none
   integer, parameter :: Nteams = 3
   type(c_ptr) :: ptr_list(Nteams)
@@ -7,7 +8,6 @@ program test_omp
   real*4, target :: a
   integer :: i,j
   integer(c_long) :: ptr_val
-  integer, external :: omp_get_team_num
 
   !$omp target teams distribute num_teams(Nteams) private(a) map(from:ptr_list, team_ID)
   do i=1, Nteams

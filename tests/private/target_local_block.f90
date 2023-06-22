@@ -1,9 +1,9 @@
 program main
+  use omp_lib
   implicit none
   integer :: a = 10
   integer :: collect_a = 0
   integer, parameter :: n = 1024
-  integer, external :: omp_get_team_num
 
   !$omp target teams map(tofrom: a, collect_a)
   block

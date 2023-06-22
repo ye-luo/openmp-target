@@ -22,6 +22,7 @@ endif()
 
 if (ENABLE_Fortran)
   enable_language(Fortran)
+  include(cmake/FortranHelpers.cmake)
   include(cmake/TestFortranOpenMPRuntime.cmake)
 endif()
 

@@ -1,5 +1,6 @@
 program test_omp
   use iso_c_binding, only: c_associated, c_loc, c_ptr, c_long
+  use omp_lib, only: omp_get_thread_num, omp_get_team_num
   implicit none
   integer, parameter :: Nteams = 3
   integer, parameter :: Nthreads = 3
@@ -10,7 +11,6 @@ program test_omp
   real*4, target :: a
   integer :: i,j
   integer(c_long) :: ptr_val
-  integer, external :: omp_get_team_num, omp_get_thread_num
 
   !$omp target teams distribute parallel do num_teams(Nteams) thread_limit(Nthreads) private(a) &
   !$omp map(from:ptr_list, team_ID, thread_ID)

@@ -1,3 +1,5 @@
+module omp_lib
+contains
 function omp_get_num_threads()
   implicit none
   integer omp_get_num_threads
@@ -21,3 +23,4 @@ function omp_get_team_num()
   integer omp_get_team_num
   omp_get_team_num = 0
 end function omp_get_team_num
+end module
