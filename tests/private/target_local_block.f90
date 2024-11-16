@@ -22,7 +22,7 @@ program main
   if (a == 10) then
      print *,"Success!"
   else
-     write(*,*) "a expected120, now = ", a
+     write(*,*) "a expected 10, now = ", a
      stop 1
   endif
 
